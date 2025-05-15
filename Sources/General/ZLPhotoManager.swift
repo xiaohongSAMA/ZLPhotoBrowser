@@ -50,8 +50,14 @@ public class ZLPhotoManager: NSObject {
                 }
             }
         }
+        
+        var newImage = image
+        
+        if ZLPhotoConfiguration.default().needWatermark {
+            newImage = ZLPhotoConfiguration.default().makeWatermarkBlock?(image) ?? image
+        }
 
-        if image.zl.hasAlphaChannel(), let data = image.pngData() {
+        if image.zl.hasAlphaChannel(), let data = newImage.pngData() {
             PHPhotoLibrary.shared().performChanges({
                 let newAssetRequest = PHAssetCreationRequest.forAsset()
                 newAssetRequest.addResource(with: .photo, data: data, options: nil)
@@ -59,7 +65,7 @@ public class ZLPhotoManager: NSObject {
             }, completionHandler: completionHandler)
         } else {
             PHPhotoLibrary.shared().performChanges({
-                let newAssetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+                let newAssetRequest = PHAssetChangeRequest.creationRequestForAsset(from: newImage)
                 placeholderAsset = newAssetRequest.placeholderForCreatedAsset
             }, completionHandler: completionHandler)
         }

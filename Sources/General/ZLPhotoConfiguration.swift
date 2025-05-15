@@ -264,6 +264,12 @@ public class ZLPhotoConfiguration: NSObject {
     /// The first parameter is the current controller.
     /// The second parameter is the block that needs to be called after the user completes the operation.
     public var operateBeforeDoneAction: ((UIViewController, @escaping () -> Void) -> Void)?
+    
+    /// 是否需要水印
+    public var needWatermark: Bool = false
+    
+    /// 制作水印block
+    public var makeWatermarkBlock: ((UIImage) -> (UIImage))?
 }
 
 @objc public enum ZLNoAuthorityType: Int {
